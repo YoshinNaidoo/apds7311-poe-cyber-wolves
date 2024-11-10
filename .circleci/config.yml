@@ -1,17 +1,29 @@
 version: 2.1
 
+orbs:
+  sonarcloud: sonarsource/sonarcloud@2.0
+
 jobs:
   build:
     docker:
-      - image: 'cimg/openjdk:17.0'
+      - image: cimg/node:16.13.0
     steps:
       - checkout
       - run:
-          name: Analyze on SonarCloud
-          command: mvn verify sonar:sonar -Dsonar.projectKey=YoshinNaidoo_apds7311-poe-cyber-wolves
+          name: Install dependencies
+          command: |
+            cd backend && npm install || true
+            cd ../frontend && npm install || true
+      - run:
+          name: Check current branch
+          command: |
+            echo "Current branch: $(git branch --show-current)"
+            echo "Git status:"
+            git status
+      - sonarcloud/scan
 
 workflows:
   main:
     jobs:
       - build:
-          context: SonarCloud
+          context: sonarcloud
