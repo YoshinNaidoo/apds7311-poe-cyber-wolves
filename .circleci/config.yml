@@ -4,9 +4,9 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@2.0
 
 jobs:
-  build:
+  build-and-test:
     docker:
-      - image: 'cimg/node:16.13.0'
+      - image: cimg/node:16.13.0
     steps:
       - checkout
       - restore_cache:
@@ -21,11 +21,10 @@ jobs:
           key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - sonarcloud/scan:
-          command: mvn verify sonar:sonar -Dsonar.projectKey=yoshinaidoo_apds7311-poe-cyber-wolves
+      - sonarcloud/scan
 
 workflows:
   main:
     jobs:
-      - build:
+      - build-and-test:
           context: sonarcloud
