@@ -9,18 +9,15 @@ jobs:
       - image: cimg/node:16.13.0
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-            - v1-deps-{{ .Branch }}
-            - v1-deps
+      # Backend
       - run:
-          name: Install dependencies
-          command: npm install
-      - save_cache:
-          key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+          name: Install Backend Dependencies
+          command: cd backend && npm install
+      # Frontend
+      - run:
+          name: Install Frontend Dependencies
+          command: cd frontend && npm install
+      # SonarCloud scan
       - sonarcloud/scan
 
 workflows:
