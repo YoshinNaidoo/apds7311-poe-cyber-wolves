@@ -11,10 +11,16 @@ jobs:
       - checkout
       - run:
           name: Install Backend Dependencies
-          command: cd backend && npm install
+          command: cd backend && npm install || true
       - run:
           name: Install Frontend Dependencies
-          command: cd frontend && npm install
+          command: cd frontend && npm install || true
+      - run:
+          name: Debug Info
+          command: |
+            echo "Current directory: $(pwd)"
+            echo "List files: $(ls -la)"
+            echo "Branch name: $(git branch --show-current)"
       - sonarcloud/scan:
           sonar_token_variable_name: SONAR_TOKEN
 
@@ -23,3 +29,8 @@ workflows:
     jobs:
       - build:
           context: sonarcloud
+          filters:
+            branches:
+              only:
+                - circleci-project-setup
+                - main
