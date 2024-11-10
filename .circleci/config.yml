@@ -1,36 +1,17 @@
 version: 2.1
 
-orbs:
-  sonarcloud: sonarsource/sonarcloud@2.0
-
 jobs:
   build:
     docker:
-      - image: cimg/node:16.13.0
+      - image: 'cimg/openjdk:17.0'
     steps:
       - checkout
       - run:
-          name: Install Backend Dependencies
-          command: cd backend && npm install || true
-      - run:
-          name: Install Frontend Dependencies
-          command: cd frontend && npm install || true
-      - run:
-          name: Debug Info
-          command: |
-            echo "Current directory: $(pwd)"
-            echo "List files: $(ls -la)"
-            echo "Branch name: $(git branch --show-current)"
-      - sonarcloud/scan:
-          sonar_token_variable_name: SONAR_TOKEN
+          name: Analyze on SonarCloud
+          command: mvn verify sonar:sonar -Dsonar.projectKey=YoshinNaidoo_apds7311-poe-cyber-wolves
 
 workflows:
   main:
     jobs:
       - build:
-          context: sonarcloud
-          filters:
-            branches:
-              only:
-                - circleci-project-setup
-                - main
+          context: SonarCloud
