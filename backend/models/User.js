@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String, 
         required:true,
-        unique: true,
+        unique: false,
         trim: true,
         match: [/^[a-zA-Z]+$/, "Please enter a valid name"]
     },
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     lastName: {
         type: String, 
         required:true,
-        unique: true,
+        unique: false,
         trim: true,
         match: [/^[a-zA-Z]+$/, "Please enter a valid surname"]
 
@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
     idNumber: {
         type: String,
         required: true,
+        unique: true,
         match: [/^\d{6}\d{4}\d{2}\d{1}$/, "Please enter a valid South African ID number"]
     },
     
@@ -43,6 +44,7 @@ const userSchema = new mongoose.Schema({
     ibanPayer: {
         type: String,
         required: true,
+        unique: true,
         match: [/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Please enter a valid IBAN (International Account Number)"]
     }
 

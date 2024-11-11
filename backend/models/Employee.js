@@ -1,58 +1,39 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 
 const employeeSchema = new mongoose.Schema({
-    employeeId: { 
-        type: String, 
-        required: true, 
-        unique: true 
-    },
-    username: { 
-        type: String, 
-        required: true, 
-        unique: true,
-        trim: true,
-        minlength: 3
-    },
-    password: { 
-        type: String, 
+    employeeId: {
+        type: String,
         required: true,
-        select: false
+        unique: true
     },
-    role: { 
-        type: String, 
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        match: /^[a-zA-Z0-9]{3,}$/ // Alphanumeric, min 3 characters 
+    },
+    password: {
+        type: String,
+        required: true,
+        match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/ // At least 8 characters, 1 upper, 1 lower, 1 number, 1 special char
+    },
+    role: {
+        type: String,
         default: 'verifier',
         enum: ['verifier', 'admin']
     },
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
-    }
-}, {
-    timestamps: true
-});
-
-// Hash password before saving
-employeeSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    
-    try {
-        this.password = await bcrypt.hash(this.password, 10);
-        next();
-    } catch (error) {
-        next(error);
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
-// Method to compare password
-employeeSchema.methods.comparePassword = async function(candidatePassword) {
-    try {
-        return await bcrypt.compare(candidatePassword, this.password);
-    } catch (error) {
-        throw error;
+// Add a pre-save hook to validate required fields
+employeeSchema.pre('save', function(next) {
+    if (!this.employeeId || !this.username || !this.password) {
+        next(new Error('All fields are required'));
     }
-};
+    next();
+});
 
-const Employee = mongoose.model('Employee', employeeSchema);
-
-export default Employee;
+export default mongoose.model('Employee', employeeSchema);

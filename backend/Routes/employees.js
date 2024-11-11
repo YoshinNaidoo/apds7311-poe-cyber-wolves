@@ -12,24 +12,37 @@ import Employee from '../models/Employee.js';
 const router = express.Router();
 
 // Login endpoint
-router.post('/employee/login', bruteForce.prevent, loginAttemptLogger, async (req, res) => {
+router.post('/', bruteForce.prevent, loginAttemptLogger, async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log('Login attempt for username:', username);
+
+        if (!username || !password) {
+            return res.status(400).json({
+                message: 'Username and password are required'
+            });
+        }
         
-        const employee = await Employee.findOne({ username });
+        const query = { username: String(username) };
+        const employee = await Employee.findOne(query);
+
         if (!employee) {
+            console.log('Employee not found:', username);
             return res.status(401).json({
                 message: 'Authentication failed'
             });
         }
 
+        console.log('Employee found, verifying password');
         const isValidPassword = await bcrypt.compare(password, employee.password);
         if (!isValidPassword) {
+            console.log('Invalid password for:', username);
             return res.status(401).json({
                 message: 'Authentication failed'
             });
         }
 
+        console.log('Password verified, generating token');
         const token = jwt.sign(
             { 
                 employeeId: employee.employeeId, 
@@ -40,14 +53,14 @@ router.post('/employee/login', bruteForce.prevent, loginAttemptLogger, async (re
             { expiresIn: '24h' }
         );
 
-        await resetBruteAttempts(req, res, () => {
-            res.status(200).json({
-                token: token,
-                employeeId: employee.employeeId,
-                username: employee.username,
-                role: employee.role
-            });
+        console.log('Login successful for:', username);
+        res.status(200).json({
+            token: token,
+            employeeId: employee.employeeId,
+            username: employee.username,
+            role: employee.role
         });
+        
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ 
@@ -104,8 +117,7 @@ router.put('/transactions/:id/verify', authMiddleware, async (req, res) => {
             return res.status(404).json({ message: 'Transaction not found' });
         }
 
-        // Add verification logic here
-        // For example, validate SWIFT code, IBAN, etc.
+        
         const isSwiftCodeValid = /^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(post.swiftCode);
         const isIbanValid = /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/.test(post.ibanPayee);
 

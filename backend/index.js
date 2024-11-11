@@ -37,10 +37,11 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api', postRoutes);
 
+//
+ app.use('/api/employees', employeeRoutes);
+app.use('/api/employees/transactions', employeeTransactionRoutes);
 // app.use('/api/employees', employeeRoutes);
-// //app.use('/api/employees/transactions', employeeTransactionRoutes);
-// app.use('/api/employees', employeeRoutes);
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 
 // Error handling middleware
