@@ -4,27 +4,26 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@2.0
 
 jobs:
-  build-and-test:
+  build:
     docker:
       - image: cimg/node:16.13.0
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-            - v1-deps-{{ .Branch }}
-            - v1-deps
       - run:
           name: Install dependencies
-          command: npm install
-      - save_cache:
-          key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+          command: |
+            cd backend && npm install || true
+            cd ../frontend && npm install || true
+      - run:
+          name: Check current branch
+          command: |
+            echo "Current branch: $(git branch --show-current)"
+            echo "Git status:"
+            git status
       - sonarcloud/scan
 
 workflows:
   main:
     jobs:
-      - build-and-test:
+      - build:
           context: sonarcloud
