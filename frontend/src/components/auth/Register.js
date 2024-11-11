@@ -52,18 +52,18 @@ function Register() {
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
-            <div className="w-full max-w-md">
-                <h2 className="mb-6 text-center text-2xl font-bold">Create your account</h2>
+        <div className="min-h-screen bg-gray-100 flex flex-col pt-16 px-4">
+            <div className="w-full max-w-md mx-auto">
+                <h2 className="text-center text-2xl font-bold">Create your account</h2>
                 
-                <div className="rounded-lg bg-white p-6 shadow-md">
+                <div className="mt-4 rounded-lg bg-white p-6 shadow-md">
                     {(error || passwordError) && (
                         <div className="mb-4 rounded border border-red-400 bg-red-100 p-3 text-red-700">
                             {error || passwordError}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-3">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Username</label>
                             <input

@@ -5,6 +5,7 @@ import axios from "axios";
 function GetPosts() {
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState('');
+    const [isAuthorized, setIsAuthorized] = useState(false); // Track authorization status
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -12,12 +13,14 @@ function GetPosts() {
                 const token = localStorage.getItem('token');
                 const response = await axios.get('/api', {
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 setPosts(response.data);
+                setIsAuthorized(true); // User is authorized if posts are fetched
             } catch (err) {
-                setError('You are not authorized to view the posts');
+                setError('You are not authorized to view Transactions, please login or signup');
+                setIsAuthorized(false); // User is not authorized
             }
         };
         fetchPosts();
@@ -28,12 +31,14 @@ function GetPosts() {
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-                    <NavLink
-                        to="/create"
-                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
-                    >
-                        Create Transaction
-                    </NavLink>
+                    {isAuthorized && ( // Conditionally render the button
+                        <NavLink
+                            to="/create"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
+                        >
+                            Create Transaction
+                        </NavLink>
+                    )}
                 </div>
 
                 {error ? (

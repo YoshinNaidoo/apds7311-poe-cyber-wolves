@@ -33,8 +33,8 @@ function App() {
   <Route path="/delete/:id" element={<DeletePost />}/>
   <Route path="/protected" element={<ProtectedPage />}/>
 
-  {/* <Route path="/employee/login" element={<EmployeeLogin />} />
-  <Route path="/employee/dashboard" element={<EmployeeDashboard />} /> */}
+   <Route path="/employee/login" element={<EmployeeLogin />} />
+  <Route path="/employee/dashboard" element={<EmployeeDashboard />} /> 
 
   
 </Routes>

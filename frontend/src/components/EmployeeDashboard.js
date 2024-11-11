@@ -73,25 +73,25 @@ const EmployeeDashboard = () => {
                 <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-lg">
                     <thead className="bg-gray-100">
                         <tr>
-                            <th className="px-6 py-3 text-left">Transaction ID</th>
-                            <th className="px-6 py-3 text-left">Customer</th>
-                            <th className="px-6 py-3 text-left">Amount</th>
-                            <th className="px-6 py-3 text-left">Currency</th>
-                            <th className="px-6 py-3 text-left">SWIFT Code</th>
-                            <th className="px-6 py-3 text-left">Actions</th>
+                            <th className="px-6 py-3 text-center">Transaction ID</th>
+                            <th className="px-6 py-3 text-center">Payee IBAN</th>
+                            <th className="px-6 py-3 text-center">Amount</th>
+                            <th className="px-6 py-3 text-center">Currency</th>
+                            <th className="px-6 py-3 text-center">SWIFT Code</th>
+                            <th className="px-6 py-3 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {transactions.map((transaction) => (
                             <tr key={transaction._id} className="border-b hover:bg-gray-50">
-                                <td className="px-6 py-4">{transaction._id}</td>
-                                <td className="px-6 py-4">{transaction.customerName}</td>
-                                <td className="px-6 py-4">{transaction.amount}</td>
-                                <td className="px-6 py-4">{transaction.currency}</td>
-                                <td className="px-6 py-4">{transaction.swiftCode}</td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 text-center">{transaction._id}</td>
+                                <td className="px-6 py-4 text-center">{transaction.ibanPayee}</td>
+                                <td className="px-6 py-4 text-center">{transaction.amount}</td>
+                                <td className="px-6 py-4 text-center">{transaction.currency}</td>
+                                <td className="px-6 py-4 text-center">{transaction.swiftCode}</td>
+                                <td className="px-6 py-4 text-center">
                                     <button
-                                        onClick={() => handleVerify(transaction._id, transaction.swiftCode)}
+                                        // onClick={() => handleVerify(transaction._id, transaction.swiftCode)}
                                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                                     >
                                         Verify & Submit

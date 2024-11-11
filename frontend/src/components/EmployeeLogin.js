@@ -11,15 +11,18 @@ const EmployeeLogin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://localhost:5000/api/employees/login', {
+            // Updated URL to match backend route
+            const response = await fetch('https://localhost:5000/api/employees', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Add this for cookies if needed
                 body: JSON.stringify({ username, password }),
             });
 
             const data = await response.json();
+            console.log('Response:', data); // Debug log
 
             if (!response.ok) {
                 throw new Error(data.message || 'Login failed');
@@ -34,10 +37,12 @@ const EmployeeLogin = () => {
             navigate('/employee/dashboard');
 
         } catch (err) {
-            setError(err.message);
+            console.error('Login error:', err);
+            setError(err.message || 'Login failed. Please try again.');
         }
     };
 
+    // Rest of your component code remains the same
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
